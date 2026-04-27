@@ -1,0 +1,165 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+const savedLanguage = localStorage.getItem('language') || 'en';
+
+// Set dir dynamically
+document.documentElement.dir = savedLanguage === 'ar' ? 'rtl' : 'ltr';
+document.documentElement.lang = savedLanguage;
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: {
+          GuestMenu: "Guest Menu",
+          StaffMenu: "Staff Menu",
+          Search: "Search...",
+          AllCategories: "All Categories",
+          DownloadPDF: "Download PDF",
+          Name: "Product Name",
+          Description: "Description",
+          Price: "Price",
+          AdminDashboard: "Admin Dashboard",
+          Login: "Login",
+          Products: "Products",
+          Categories: "Categories",
+          AddProduct: "Add Product",
+          AddCategory: "Add Category",
+          Edit: "Edit",
+          Delete: "Delete",
+          Logout: "Logout",
+          Language: "العربية",
+          ConfirmDelete: "Are you sure you want to delete this?",
+          FetchingMenu: "Fetching Menu...",
+          GeneratingPDF: "Generating PDF...",
+          PleaseWait: "Please wait a moment while we prepare your professional menu.",
+          ReadyForDownload: "Ready for Download!",
+          MenuGenerated: "Your menu PDF has been generated successfully.",
+          DownloadAgain: "Download Again",
+          BackToMenu: "Back to Menu",
+          SomethingWentWrong: "Oops! Something went wrong",
+          CouldNotGenerate: "We couldn't generate your PDF. Please try again or go back to the menu.",
+          NoItemsFound: "No items found matching your search.",
+          AdminLogin: "Admin Login",
+          DashboardAccess: "MMS Dashboard Access",
+          Email: "Email",
+          Password: "Password",
+          SignIn: "Sign In",
+          StoreOverview: "Overview of your system performance",
+          TotalProducts: "Total Products",
+          TotalCategories: "Total Categories",
+          ActiveUsers: "Active Users",
+          Standard: "Standard",
+          Live: "Live",
+          EnglishName: "English Name",
+          ArabicName: "Arabic Name",
+          Status: "Status",
+          Actions: "Actions",
+          Active: "Active",
+          Hidden: "Hidden",
+          NoCategoriesFound: "No categories found.",
+          NoProductsFound: "No products found.",
+          EditCategory: "Edit Category",
+          AddCategory: "Add Category",
+          EditProduct: "Edit Product",
+          AddProduct: "Add Product",
+          Cancel: "Cancel",
+          Save: "Save",
+          Product: "Product",
+          Category: "Category",
+          StaffPrice: "Staff Price",
+          GuestPrice: "Guest Price",
+          VisibleToPublic: "Visible to public",
+          ExportData: "Export Data",
+          ImportExcel: "Import Excel",
+          Template: "Template",
+          ExportCSV: "Export as CSV",
+          ExportExcel: "Export as Excel",
+        }
+      },
+      ar: {
+        translation: {
+          GuestMenu: "قائمة الضيوف",
+          StaffMenu: "قائمة الموظفين",
+          Search: "بحث...",
+          AllCategories: "جميع الفئات",
+          DownloadPDF: "تحميل PDF",
+          Name: "اسم المنتج",
+          Description: "الوصف",
+          Price: "السعر",
+          AdminDashboard: "لوحة تحكم الإدارة",
+          Login: "تسجيل الدخول",
+          Products: "المنتجات",
+          Categories: "الفئات",
+          AddProduct: "إضافة منتج",
+          AddCategory: "إضافة فئة",
+          Edit: "تعديل",
+          Delete: "حذف",
+          Logout: "تسجيل الخروج",
+          Language: "English",
+          ConfirmDelete: "هل أنت متأكد من الحذف؟",
+          FetchingMenu: "جاري جلب القائمة...",
+          GeneratingPDF: "جاري إنشاء ملف PDF...",
+          PleaseWait: "يرجى الانتظار لحظة بينما نقوم بتجهيز قائمتك الاحترافية.",
+          ReadyForDownload: "جاهز للتحميل!",
+          MenuGenerated: "تم إنشاء ملف PDF الخاص بالقائمة بنجاح.",
+          DownloadAgain: "تحميل مرة أخرى",
+          BackToMenu: "العودة للقائمة",
+          SomethingWentWrong: "عذراً! حدث خطأ ما",
+          CouldNotGenerate: "لم نتمكن من إنشاء ملف PDF الخاص بك. يرجى المحاولة مرة أخرى أو العودة إلى القائمة.",
+          NoItemsFound: "لم يتم العثور على عناصر تطابق بحثك.",
+          AdminLogin: "دخول المشرف",
+          DashboardAccess: "الوصول إلى لوحة التحكم",
+          Email: "البريد الإلكتروني",
+          Password: "كلمة المرور",
+          SignIn: "تسجيل الدخول",
+          StoreOverview: "نظرة عامة على أداء النظام",
+          TotalProducts: "إجمالي المنتجات",
+          TotalCategories: "إجمالي الفئات",
+          ActiveUsers: "المستخدمين النشطين",
+          Standard: "قياسي",
+          Live: "مباشر",
+          EnglishName: "الاسم بالإنجليزية",
+          ArabicName: "الاسم بالعربية",
+          Status: "الحالة",
+          Actions: "الإجراءات",
+          Active: "نشط",
+          Hidden: "مخفي",
+          NoCategoriesFound: "لم يتم العثور على فئات.",
+          NoProductsFound: "لم يتم العثور على منتجات.",
+          EditCategory: "تعديل الفئة",
+          AddCategory: "إضافة فئة",
+          EditProduct: "تعديل المنتج",
+          AddProduct: "إضافة منتج",
+          Cancel: "إلغاء",
+          Save: "حفظ",
+          Product: "المنتج",
+          Category: "الفئة",
+          StaffPrice: "سعر الموظف",
+          GuestPrice: "سعر الضيف",
+          VisibleToPublic: "مرئي للعامة",
+          ExportData: "تصدير البيانات",
+          ImportExcel: "استيراد من إكسل",
+          Template: "نموذج",
+          ExportCSV: "تصدير كـ CSV",
+          ExportExcel: "تصدير كـ Excel",
+        }
+      }
+    },
+    lng: savedLanguage,
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false
+    }
+  });
+
+// Handle direction change on language change
+i18n.on('languageChanged', (lng) => {
+  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
+  document.documentElement.lang = lng;
+  localStorage.setItem('language', lng);
+});
+
+export default i18n;

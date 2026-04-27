@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  
+  /* Primary custom color: #5AC6D8 */
+  --color-main: #5ac6d8;
+  --color-blue-50: #e8f7fa;
+  --color-blue-100: #c6eaf0;
+  --color-blue-200: #a4dde7;
+  --color-blue-300: #81cfdd;
+  --color-blue-400: #5ac6d8;
+  --color-blue-500: #5ac6d8;
+  --color-blue-600: #48a0b0;
+  --color-blue-700: #377d8a;
+  --color-blue-800: #265a64;
+  --color-blue-900: #15373e;
+
+  /* Since we had some indigo gradients, set indigo to match blue */
+  --color-indigo-50: #e8f7fa;
+  --color-indigo-100: #c6eaf0;
+  --color-indigo-500: #5ac6d8;
+  --color-indigo-600: #48a0b0;
+
+  /* Secondary/Success custom color: #70B62E */
+  --color-emerald-50: #eef6e6;
+  --color-emerald-100: #d4e8c1;
+  --color-emerald-200: #b9da9b;
+  --color-emerald-300: #9fcb76;
+  --color-emerald-400: #84be50;
+  --color-emerald-500: #70B62E;
+  --color-emerald-600: #5a9425;
+  --color-emerald-700: #45731c;
+  --color-emerald-800: #305113;
+  --color-emerald-900: #1a2f09;
+
+  /* Surface and Slate colors as HEX to avoid oklch crash */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+
+  --color-surface-50: var(--color-slate-50);
+  --color-surface-100: var(--color-slate-100);
+  --color-surface-800: var(--color-slate-800);
+  --color-surface-900: var(--color-slate-900);
+}
+
+@layer base {
+  :root {
+    --background: var(--color-surface-50);
+    --foreground: var(--color-surface-900);
+  }
+
+  /* Support for Dark Mode and RTL logic could be extended here */
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply antialiased min-h-screen transition-colors duration-200;
+  }
+
+  @keyframes bounce-y {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  .bounce-y {
+    animation: bounce-y 0.5s ease-in-out infinite;
+  }
+  .group-hover\:bounce-y:hover .bounce-y,
+  .group:hover .group-hover\:bounce-y {
+    animation: bounce-y 0.5s ease-in-out infinite;
+  }
+}
