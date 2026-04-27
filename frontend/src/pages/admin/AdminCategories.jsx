@@ -145,15 +145,15 @@ export default function AdminCategories() {
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none transition-all font-arabic"
                 />
               </div>
-              
+
               <label className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 cursor-pointer hover:bg-blue-100/50 transition-colors group">
                 <div className="relative inline-flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="isAvailable" 
+                  <input
+                    type="checkbox"
+                    id="isAvailable"
                     className="sr-only peer"
-                    checked={formData.isAvailable} 
-                    onChange={e => setFormData({ ...formData, isAvailable: e.target.checked })} 
+                    checked={formData.isAvailable}
+                    onChange={e => setFormData({ ...formData, isAvailable: e.target.checked })}
                   />
                   <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500 group-hover:ring-4 group-hover:ring-blue-500/10"></div>
                 </div>

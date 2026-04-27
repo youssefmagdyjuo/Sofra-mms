@@ -189,7 +189,7 @@ export default function AdminProducts() {
             <Download className="w-4 h-4" />
             <span className="sm:inline">{t('Template')}</span>
           </Button>
-          
+
           <input
             type="file"
             accept=".xlsx, .xls, .csv"
@@ -197,12 +197,12 @@ export default function AdminProducts() {
             ref={fileInputRef}
             onChange={handleFileChange}
           />
-          
+
           <Button onClick={() => fileInputRef.current?.click()} variant="secondary" className="flex-1 sm:flex-none gap-2 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 border-0" isLoading={isImporting} disabled={isImporting || isExporting}>
             <FileSpreadsheet className="w-4 h-4" />
             <span className="sm:inline">{t('ImportExcel')}</span>
           </Button>
-          
+
           <Button onClick={() => {
             setEditingId(null);
             setFormData({ ...initialFormState, category_id: categories[0]?.id || '' });
@@ -326,12 +326,12 @@ export default function AdminProducts() {
 
               <label className="flex items-center gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50 cursor-pointer hover:bg-blue-100/50 transition-colors group">
                 <div className="relative inline-flex items-center">
-                  <input 
-                    type="checkbox" 
-                    id="isAvailable" 
+                  <input
+                    type="checkbox"
+                    id="isAvailable"
                     className="sr-only peer"
-                    checked={formData.isAvailable} 
-                    onChange={e => setFormData({ ...formData, isAvailable: e.target.checked })} 
+                    checked={formData.isAvailable}
+                    onChange={e => setFormData({ ...formData, isAvailable: e.target.checked })}
                   />
                   <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500 group-hover:ring-4 group-hover:ring-blue-500/10"></div>
                 </div>
