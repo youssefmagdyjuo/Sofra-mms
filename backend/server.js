@@ -10,14 +10,7 @@ const productRoutes = require('./routes/products');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({
-  origin: [
-    'https://auh-sofra-e8kttk6zz-youssef-magdys-projects-9b170bf2.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 app.use('/auth', authRoutes);
