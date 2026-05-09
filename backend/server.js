@@ -18,7 +18,7 @@ app.use('/categories', categoryRoutes);
 app.use('/products', productRoutes);
 //Test connection
 app.get('/', (req, res) => {
-  res.send('Welcome to Sofra API! The server is running and connected to Aiven Database.');
+  res.send('Welcome to Sofra API The server is running and connected to Aiven Database.');
 });
 // Database sync and server start
 sequelize.sync().then(() => {
