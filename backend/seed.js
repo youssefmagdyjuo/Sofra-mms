@@ -1,9 +1,16 @@
 const bcrypt = require('bcrypt');
-const { sequelize, User, Category, Product } = require('./models');
+const { User, Category, Product } = require('./models');
 
 const seed = async () => {
   try {
-    await sequelize.sync({ force: true });
+    // Check if admin already exists
+    const adminExists = await User.findOne({ where: { email: 'admin@mms.com' } });
+    if (adminExists) {
+      console.log('Database already seeded. Skipping...');
+      return;
+    }
+
+    console.log('Seeding database...');
     
     // Create admin user
     const salt = await bcrypt.genSalt(10);
@@ -40,11 +47,9 @@ const seed = async () => {
     });
 
     console.log('Database seeded successfully! Admin: admin@mms.com / admin123');
-    process.exit(0);
   } catch (err) {
-    console.error(err);
-    process.exit(1);
+    console.error('Error seeding database:', err);
   }
 };
 
-seed();
+module.exports = seed;

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { sequelize } = require('./models');
+const seed = require('./seed');
 
 const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');
@@ -21,7 +22,8 @@ app.get('/', (req, res) => {
   res.send('Welcome to Sofra API The server is running and connected to Aiven Database.');
 });
 // Database sync and server start
-sequelize.sync().then(() => {
+sequelize.sync().then(async () => {
+  await seed();
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
