@@ -16,10 +16,16 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/products', productRoutes);
-
+//Test connection
+app.get('/', (req, res) => {
+  res.send('Welcome to Sofra API! The server is running and connected to Aiven Database.');
+});
 // Database sync and server start
 sequelize.sync().then(() => {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
-}).catch(err => console.error('Database connection failed', err));
+}).catch(err => {
+  console.error('Database connection failed:', err);
+  process.exit(1);
+});
