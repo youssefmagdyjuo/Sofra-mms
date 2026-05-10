@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
-import { Lock } from 'lucide-react';
+import { Lock, ArrowLeft, ArrowRight } from 'lucide-react';
 import api from '@/services/api';
 import { useTranslation } from 'react-i18next';
 
@@ -29,10 +29,20 @@ export default function AdminLogin() {
     }
   };
 
+  const isRtl = i18n.language === 'ar';
+
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4" dir={isRtl ? 'rtl' : 'ltr'}>
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-        <div className="bg-slate-900 p-8 text-center">
+        <div className="bg-slate-900 p-8 text-center relative">
+          <button 
+            onClick={() => navigate('/')}
+            className={`absolute top-6 ${isRtl ? 'right-6' : 'left-6'} text-slate-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium`}
+          >
+            {isRtl ? <ArrowRight className="w-4 h-4" /> : <ArrowLeft className="w-4 h-4" />}
+            {t('BackToMenu')}
+          </button>
+          
           <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/30">
             <Lock className="w-8 h-8 text-white" />
           </div>
@@ -54,7 +64,7 @@ export default function AdminLogin() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-              placeholder="admin@mms.com"
+              placeholder={t('EnterEmail')}
               required
             />
           </div>
@@ -66,7 +76,7 @@ export default function AdminLogin() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none"
-              placeholder="••••••••"
+              placeholder={t('EnterPassword')}
               required
             />
           </div>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Search, Download } from 'lucide-react';
 import api from '@/services/api';
 
-export default function PublicMenu({ type }) {
+export default function PublicMenu({ type, hideNavbar = false }) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState([]);
@@ -21,6 +21,7 @@ export default function PublicMenu({ type }) {
           api.get('/categories'),
           api.get('/products')
         ]);
+
         setCategories(catsRes.data.filter(c => c.isAvailable));
         setProducts(prodsRes.data.filter(p => p.isAvailable));
       } catch (err) {
@@ -63,7 +64,7 @@ export default function PublicMenu({ type }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
-      <Navbar />
+      {!hideNavbar && <Navbar />}
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col items-center mb-8">

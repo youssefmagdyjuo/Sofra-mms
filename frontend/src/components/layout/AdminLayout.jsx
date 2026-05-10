@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navigate, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LogOut, LayoutDashboard, UtensilsCrossed, Tags, Menu, ChevronLeft, ChevronRight, Globe, X } from 'lucide-react';
+import { LogOut, LayoutDashboard, UtensilsCrossed, Tags, Menu, ChevronLeft, ChevronRight, Globe, X, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminLayout() {
@@ -35,6 +35,7 @@ export default function AdminLayout() {
     { label: t('AdminDashboard'), path: '/admin/dashboard', icon: LayoutDashboard },
     { label: t('Categories'), path: '/admin/categories', icon: Tags },
     { label: t('Products'), path: '/admin/products', icon: UtensilsCrossed },
+    { label: t('ViewMenu'), path: '/admin/view-menu', icon: Eye },
   ];
 
   const sidebarVariants = {
@@ -43,7 +44,7 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F8FAFC] transition-colors duration-300 relative overflow-x-hidden" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="h-screen flex bg-[#F8FAFC] transition-colors duration-300 overflow-hidden" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-30 flex items-center justify-between px-4 shadow-sm">
@@ -77,11 +78,11 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed lg:relative inset-y-0 ${i18n.language === 'ar' ? 'right-0' : 'left-0'} 
-          z-50 lg:z-20 flex flex-col bg-white border-r border-slate-200/60 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.02)] transition-all duration-500
+          fixed lg:static inset-y-0 ${i18n.language === 'ar' ? 'right-0' : 'left-0'} 
+          z-50 flex flex-col bg-white border-r border-slate-200/60 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.02)] transition-all duration-500
           ${isMobileMenuOpen ? 'translate-x-0' : (i18n.language === 'ar' ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0')}
           ${isSidebarOpen ? 'w-72' : 'w-24'}
-          ${!isMobileMenuOpen && 'lg:flex'}
+          ${!isMobileMenuOpen && 'lg:flex lg:h-full flex-shrink-0'}
         `}
       >
         <div className="p-8 flex items-center justify-between">
@@ -184,8 +185,8 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 pt-16 lg:pt-0">
-        <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-auto bg-[#fafbfc]">
+      <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden pt-16 lg:pt-0">
+        <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto bg-[#fafbfc]">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

@@ -7,6 +7,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminCategories from './pages/admin/AdminCategories';
+import AdminViewMenu from './pages/admin/AdminViewMenu';
 import './i18n/config';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="products" element={<AdminProducts />} />
           <Route path="categories" element={<AdminCategories />} />
+          <Route path="view-menu" element={<AdminViewMenu />} />
         </Route>
       </Routes>
     </Router>

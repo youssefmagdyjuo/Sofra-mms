@@ -25,9 +25,6 @@ export default function Navbar() {
             <Globe className="w-4 h-4" />
             <span className="font-semibold">{t('Language')}</span>
           </Button>
-          <Link to="/admin/login">
-            <Button variant="outline" size="sm">{t('Login')}</Button>
-          </Link>
         </div>
       </div>
     </nav>

@@ -77,6 +77,9 @@ i18n
           Template: "Template",
           ExportCSV: "Export as CSV",
           ExportExcel: "Export as Excel",
+          EnterEmail: "Enter Email",
+          EnterPassword: "Enter Password",
+          ViewMenu: "View Menu",
         }
       },
       ar: {
@@ -145,6 +148,9 @@ i18n
           Template: "نموذج",
           ExportCSV: "تصدير كـ CSV",
           ExportExcel: "تصدير كـ Excel",
+          EnterEmail: "أدخل البريد الإلكتروني",
+          EnterPassword: "أدخل كلمة المرور",
+          ViewMenu: "عرض القائمة",
         }
       }
     },
