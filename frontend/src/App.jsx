@@ -8,7 +8,15 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminCategories from './pages/admin/AdminCategories';
 import AdminViewMenu from './pages/admin/AdminViewMenu';
+import AdminUsers from './pages/admin/AdminUsers';
+import ChangePassword from './pages/admin/ChangePassword';
 import './i18n/config';
+
+// Guard for Super Admin routes
+const SuperAdminRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
+  return user.role === 'super_admin' ? children : <Navigate to="/admin/dashboard" replace />;
+};
 
 function App() {
   return (
@@ -27,6 +35,12 @@ function App() {
           <Route path="products" element={<AdminProducts />} />
           <Route path="categories" element={<AdminCategories />} />
           <Route path="view-menu" element={<AdminViewMenu />} />
+          <Route path="users" element={
+            <SuperAdminRoute>
+              <AdminUsers />
+            </SuperAdminRoute>
+          } />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
     </Router>

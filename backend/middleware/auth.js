@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = (req, res, next) => {
+const requireAuth = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,5 +17,19 @@ const authMiddleware = (req, res, next) => {
     return res.status(403).json({ message: 'Forbidden: Invalid token' });
   }
 };
+
+const requireSuperAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  if (req.user.role !== 'super_admin') {
+    return res.status(403).json({ message: 'Forbidden: Super Admin access required' });
+  }
+  next();
+};
+
+const authMiddleware = requireAuth;
+authMiddleware.requireAuth = requireAuth;
+authMiddleware.requireSuperAdmin = requireSuperAdmin;
 
 module.exports = authMiddleware;

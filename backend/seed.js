@@ -6,7 +6,21 @@ const seed = async () => {
     // Check if admin already exists
     const adminExists = await User.findOne({ where: { email: 'admin@mms.com' } });
     if (adminExists) {
-      console.log('Database already seeded. Skipping...');
+      let updated = false;
+      if (adminExists.role !== 'super_admin') {
+        adminExists.role = 'super_admin';
+        updated = true;
+      }
+      if (!adminExists.username) {
+        adminExists.username = 'Super Admin';
+        updated = true;
+      }
+      if (updated) {
+        await adminExists.save();
+        console.log('Updated existing admin to super_admin.');
+      } else {
+        console.log('Database already seeded. Skipping...');
+      }
       return;
     }
 
@@ -17,8 +31,10 @@ const seed = async () => {
     const hashedPassword = await bcrypt.hash('admin123', salt);
     
     await User.create({
+      username: 'Super Admin',
       email: 'admin@mms.com',
       password: hashedPassword,
+      role: 'super_admin',
     });
     
     // Create categories

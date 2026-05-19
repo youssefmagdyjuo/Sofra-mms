@@ -7,6 +7,10 @@ const User = sequelize.define('User', {
     autoIncrement: true,
     primaryKey: true,
   },
+  username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,6 +23,13 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'admin',
+  },
+}, {
+  timestamps: true,
 });
 
 module.exports = User;

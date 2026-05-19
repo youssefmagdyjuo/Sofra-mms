@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navigate, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LogOut, LayoutDashboard, UtensilsCrossed, Tags, Menu, ChevronLeft, ChevronRight, Globe, X, Eye } from 'lucide-react';
+import { LogOut, LayoutDashboard, UtensilsCrossed, Tags, Menu, ChevronLeft, ChevronRight, Globe, X, Eye, Users, KeyRound } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminLayout() {
@@ -28,14 +28,19 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
     navigate('/admin/login');
   };
+
+  const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
 
   const navItems = [
     { label: t('AdminDashboard'), path: '/admin/dashboard', icon: LayoutDashboard },
     { label: t('Categories'), path: '/admin/categories', icon: Tags },
     { label: t('Products'), path: '/admin/products', icon: UtensilsCrossed },
     { label: t('ViewMenu'), path: '/admin/view-menu', icon: Eye },
+    ...(user.role === 'super_admin' ? [{ label: t('UserManagement'), path: '/admin/users', icon: Users }] : []),
+    { label: t('ChangePassword'), path: '/admin/change-password', icon: KeyRound },
   ];
 
   const sidebarVariants = {
