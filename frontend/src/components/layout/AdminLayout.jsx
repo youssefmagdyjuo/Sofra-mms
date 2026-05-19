@@ -120,7 +120,26 @@ export default function AdminLayout() {
           </button>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 mt-6 overflow-y-auto">
+        {/* User Profile Info Card in Sidebar */}
+        <div className={`px-6 py-4 border-b border-slate-100/80 mb-4 transition-all duration-300 flex items-center gap-3 overflow-hidden ${isSidebarOpen || isMobileMenuOpen ? 'opacity-100' : 'lg:justify-center'}`}>
+          <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg shadow-inner shrink-0 group relative cursor-pointer hover:bg-blue-500 hover:text-white transition-all duration-300">
+            {user.username ? user.username.charAt(0).toUpperCase() : 'A'}
+          </div>
+          {(isSidebarOpen || isMobileMenuOpen) && (
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex flex-col min-w-0"
+            >
+              <span className="font-extrabold text-slate-800 text-sm truncate">{user.username || 'Admin User'}</span>
+              <span className={`inline-flex items-center w-max px-2.5 py-0.5 mt-1 rounded-full text-[10px] font-extrabold tracking-wide uppercase ${user.role === 'super_admin' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>
+                {user.role === 'super_admin' ? t('SuperAdmin') : t('Admin')}
+              </span>
+            </motion.div>
+          )}
+        </div>
+
+        <nav className="flex-1 px-4 space-y-2 mt-2 overflow-y-auto">
           {navItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = location.pathname.includes(item.path);
@@ -193,7 +212,17 @@ export default function AdminLayout() {
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden pt-16 lg:pt-0">
         <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto bg-[#fafbfc]">
           <div className="max-w-7xl mx-auto">
-            <Outlet />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
       </main>

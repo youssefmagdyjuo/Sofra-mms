@@ -4,50 +4,54 @@ import { useTranslation } from 'react-i18next';
 import Navbar from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/Button';
 import { Search, Download } from 'lucide-react';
-import api from '@/services/api';
+import { useApp } from '@/context/AppContext';
 
 export default function PublicMenu({ type, hideNavbar = false }) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [categories, setCategories] = useState([]);
-  const [products, setProducts] = useState([]);
+  const { categories, products, fetchCategories, fetchProducts } = useApp();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadMenuData = async () => {
       try {
-        const [catsRes, prodsRes] = await Promise.all([
-          api.get('/categories'),
-          api.get('/products')
+        await Promise.all([
+          fetchCategories(),
+          fetchProducts()
         ]);
-
-        setCategories(catsRes.data.filter(c => c.isAvailable));
-        setProducts(prodsRes.data.filter(p => p.isAvailable));
       } catch (err) {
-        console.error('Failed to load menu');
+        console.error('Failed silently to refresh menu');
       }
     };
-    fetchData();
+    loadMenuData();
   }, []);
 
   const lang = i18n.language; // 'en' or 'ar'
 
+  const availableCategories = useMemo(() => {
+    return categories.filter(c => c.isAvailable);
+  }, [categories]);
+
+  const availableProducts = useMemo(() => {
+    return products.filter(p => p.isAvailable);
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
-    return products.filter(p => {
+    return availableProducts.filter(p => {
       const matchesSearch = p[`name_${lang}`].toLowerCase().includes(search.toLowerCase());
       const matchesCat = activeCategory === 'all' || p.category_id === activeCategory;
       return matchesSearch && matchesCat;
     });
-  }, [products, search, activeCategory, lang]);
+  }, [availableProducts, search, activeCategory, lang]);
 
   const displayCategories = useMemo(() => {
-    return categories.filter(c => products.some(p => p.category_id === c.id));
-  }, [categories, products]);
+    return availableCategories.filter(c => availableProducts.some(p => p.category_id === c.id));
+  }, [availableCategories, availableProducts]);
 
   const groupedProducts = useMemo(() => {
     const groups = {};
-    categories.forEach(c => {
+    availableCategories.forEach(c => {
       groups[c.id] = { ...c, items: [] };
     });
     filteredProducts.forEach(p => {
@@ -56,7 +60,7 @@ export default function PublicMenu({ type, hideNavbar = false }) {
       }
     });
     return Object.values(groups).filter(g => g.items.length > 0);
-  }, [categories, filteredProducts]);
+  }, [availableCategories, filteredProducts]);
 
   const handleDownloadPDF = () => {
     navigate(`/menu-pdf?type=${type}&lang=${lang}`);

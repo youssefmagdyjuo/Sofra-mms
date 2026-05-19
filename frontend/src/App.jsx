@@ -12,6 +12,9 @@ import AdminUsers from './pages/admin/AdminUsers';
 import ChangePassword from './pages/admin/ChangePassword';
 import './i18n/config';
 
+import { AppProvider } from './context/AppContext';
+import GlobalLoader from './components/ui/GlobalLoader';
+
 // Guard for Super Admin routes
 const SuperAdminRoute = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
@@ -20,8 +23,10 @@ const SuperAdminRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
-      <Routes>
+    <AppProvider>
+      <Router>
+        <GlobalLoader />
+        <Routes>
         <Route path="/" element={<PublicMenu type="guest" />} />
         <Route path="/staff" element={<PublicMenu type="staff" />} />
         <Route path="/menu-pdf" element={<MenuPDF />} />
@@ -44,6 +49,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
+    </AppProvider>
   );
 }
 

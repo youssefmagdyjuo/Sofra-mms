@@ -1,24 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '@/services/api';
+import { useApp } from '@/context/AppContext';
 import { Tags, UtensilsCrossed } from 'lucide-react';
 import Magnetic from '@/components/ui/Magnetic';
 import { motion } from 'framer-motion';
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
+  const { fetchCategories, fetchProducts } = useApp();
   const [stats, setStats] = useState({ categories: 0, products: 0 });
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const [cats, prods] = await Promise.all([
-          api.get('/categories'),
-          api.get('/products')
+          fetchCategories(),
+          fetchProducts()
         ]);
         setStats({
-          categories: cats.data.length,
-          products: prods.data.length,
+          categories: cats.length,
+          products: prods.length,
         });
       } catch (err) {
         console.error(err);

@@ -1,25 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
+import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
 import { Edit2, Trash2, Plus, Tags, X } from 'lucide-react';
 
 export default function AdminCategories() {
   const { t } = useTranslation();
-  const [categories, setCategories] = useState([]);
+  const { categories, fetchCategories, invalidateCache } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ name_en: '', name_ar: '', isAvailable: true });
-
-  const fetchCategories = async () => {
-    try {
-      const res = await api.get('/categories');
-      setCategories(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   useEffect(() => {
     fetchCategories();
@@ -36,7 +28,7 @@ export default function AdminCategories() {
       setShowModal(false);
       setEditingId(null);
       setFormData({ name_en: '', name_ar: '', isAvailable: true });
-      fetchCategories();
+      invalidateCache();
     } catch (err) {
       console.error(err);
     }
@@ -52,7 +44,7 @@ export default function AdminCategories() {
     if (window.confirm(t('ConfirmDelete'))) {
       try {
         await api.delete(`/categories/${id}`);
-        fetchCategories();
+        invalidateCache();
       } catch (err) {
         console.error(err);
       }

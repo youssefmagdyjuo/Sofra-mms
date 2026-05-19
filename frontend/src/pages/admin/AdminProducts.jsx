@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
+import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
 import { Edit2, Trash2, Plus, Download, Upload, FileSpreadsheet, UtensilsCrossed, X } from 'lucide-react';
@@ -8,8 +9,7 @@ import * as XLSX from 'xlsx';
 
 export default function AdminProducts() {
   const { t } = useTranslation();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const { products, categories, fetchProducts, fetchCategories, invalidateCache } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -30,21 +30,19 @@ export default function AdminProducts() {
 
   const [formData, setFormData] = useState(initialFormState);
 
-  const fetchData = async () => {
+  const loadData = async () => {
     try {
-      const [prodsRes, catsRes] = await Promise.all([
-        api.get('/products'),
-        api.get('/categories')
+      await Promise.all([
+        fetchProducts(),
+        fetchCategories()
       ]);
-      setProducts(prodsRes.data);
-      setCategories(catsRes.data);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    loadData();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -58,7 +56,7 @@ export default function AdminProducts() {
       setShowModal(false);
       setEditingId(null);
       setFormData(initialFormState);
-      fetchData();
+      invalidateCache();
     } catch (err) {
       console.error(err);
     }
@@ -79,7 +77,7 @@ export default function AdminProducts() {
     if (window.confirm(t('ConfirmDelete'))) {
       try {
         await api.delete(`/products/${id}`);
-        fetchData();
+        invalidateCache();
       } catch (err) {
         console.error(err);
       }
@@ -130,7 +128,7 @@ export default function AdminProducts() {
       setPreviewData(null);
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-      fetchData();
+      invalidateCache();
     } catch (err) {
       alert(err.response?.data?.message || 'Error importing file');
     } finally {
