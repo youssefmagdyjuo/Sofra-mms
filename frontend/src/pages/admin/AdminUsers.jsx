@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
+import TableSkeleton from '@/components/ui/TableSkeleton';
 import { Trash2, Plus, Users, X, UserCheck, ShieldAlert } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -13,6 +14,7 @@ export default function AdminUsers() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '', role: 'admin' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tableLoading, setTableLoading] = useState(true);
 
   const currentUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
 
@@ -22,6 +24,8 @@ export default function AdminUsers() {
       setUsers(res.data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setTableLoading(false);
     }
   };
 
@@ -97,55 +101,61 @@ export default function AdminUsers() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((user, index) => {
-            const isProtected = user.role === 'super_admin' || user.email === 'admin@mms.com' || user.id === currentUser.id;
-            return (
-              <TableRow key={user.id} index={index}>
-                <TableCell className="font-semibold text-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${user.role === 'super_admin' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
-                      <Users className="w-4 h-4" />
-                    </div>
-                    <span>{user.username}</span>
-                  </div>
-                </TableCell>
-                <TableCell className="text-slate-600 font-medium">{user.email}</TableCell>
-                <TableCell>
-                  <span className={`px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${user.role === 'super_admin' ? 'bg-amber-100 text-amber-800 border border-amber-200/50' : 'bg-slate-100 text-slate-700 border border-slate-200/50'}`}>
-                    {user.role === 'super_admin' ? t('SuperAdmin') : t('Admin')}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    {isProtected ? (
-                      <span className="p-2 text-slate-300 cursor-not-allowed" title="Protected Account">
-                        <UserCheck className="w-5 h-5 text-slate-300" />
+          {tableLoading ? (
+            <TableSkeleton cols={4} rows={4} />
+          ) : (
+            <>
+              {users.map((user, index) => {
+                const isProtected = user.role === 'super_admin' || user.email === 'admin@mms.com' || user.id === currentUser.id;
+                return (
+                  <TableRow key={user.id} index={index}>
+                    <TableCell className="font-semibold text-slate-800">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${user.role === 'super_admin' ? 'bg-amber-50 text-amber-600' : 'bg-blue-50 text-blue-600'}`}>
+                          <Users className="w-4 h-4" />
+                        </div>
+                        <span>{user.username}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-slate-600 font-medium">{user.email}</TableCell>
+                    <TableCell>
+                      <span className={`px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${user.role === 'super_admin' ? 'bg-amber-100 text-amber-800 border border-amber-200/50' : 'bg-slate-100 text-slate-700 border border-slate-200/50'}`}>
+                        {user.role === 'super_admin' ? t('SuperAdmin') : t('Admin')}
                       </span>
-                    ) : (
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-9 w-9 hover:bg-red-50 hover:text-red-600" 
-                        onClick={() => handleDelete(user.id, user.role, user.email)}
-                        title={t('DeleteUser')}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    )}
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-          {users.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center py-12 text-slate-500">
-                <div className="flex flex-col items-center gap-2">
-                  <Users className="w-8 h-8 text-slate-200" />
-                  <p>No users found</p>
-                </div>
-              </TableCell>
-            </TableRow>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        {isProtected ? (
+                          <span className="p-2 text-slate-300 cursor-not-allowed" title="Protected Account">
+                            <UserCheck className="w-5 h-5 text-slate-300" />
+                          </span>
+                        ) : (
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-9 w-9 hover:bg-red-50 hover:text-red-600" 
+                            onClick={() => handleDelete(user.id, user.role, user.email)}
+                            title={t('DeleteUser')}
+                          >
+                            <Trash2 className="w-4 h-4 text-red-500" />
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+              {users.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-12 text-slate-500">
+                    <div className="flex flex-col items-center gap-2">
+                      <Users className="w-8 h-8 text-slate-200" />
+                      <p>No users found</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </>
           )}
         </TableBody>
       </Table>

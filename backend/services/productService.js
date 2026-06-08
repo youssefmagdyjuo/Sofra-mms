@@ -12,6 +12,7 @@ const importProductsFromExcel = async (buffer) => {
   }
 
   let insertedProducts = 0;
+  let updatedProducts = 0;
   let createdCategories = 0;
   let errors = [];
 
@@ -56,9 +57,17 @@ const importProductsFromExcel = async (buffer) => {
         createdCategories++;
       }
 
-      const exists = await Product.findOne({ where: { name_en, category_id: category.id } });
-      if (exists) {
-        errors.push(`Row ${rowNum}: Product "${name_en}" already exists in this category.`);
+      const existing = await Product.findOne({ where: { name_en, category_id: category.id } });
+      if (existing) {
+        // If prices changed → update, otherwise skip silently
+        const priceChanged =
+          Number(existing.price_staff).toFixed(2) !== Number(price_staff).toFixed(2) ||
+          Number(existing.price_guest).toFixed(2) !== Number(price_guest).toFixed(2);
+
+        if (priceChanged) {
+          await existing.update({ price_staff, price_guest });
+          updatedProducts++;
+        }
         continue;
       }
 
@@ -71,7 +80,7 @@ const importProductsFromExcel = async (buffer) => {
     }
   }
 
-  return { insertedProducts, createdCategories, errors };
+  return { insertedProducts, updatedProducts, createdCategories, errors };
 };
 
 const exportProductsToExcel = async () => {

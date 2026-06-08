@@ -4,6 +4,7 @@ import api from '@/services/api';
 import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
+import TableSkeleton from '@/components/ui/TableSkeleton';
 import { Edit2, Trash2, Plus, Download, Upload, FileSpreadsheet, UtensilsCrossed, X } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -12,6 +13,7 @@ export default function AdminProducts() {
   const { products, categories, fetchProducts, fetchCategories, invalidateCache } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [tableLoading, setTableLoading] = useState(true);
 
   // Excel Import/Export state
   const [previewData, setPreviewData] = useState(null);
@@ -38,6 +40,8 @@ export default function AdminProducts() {
       ]);
     } catch (err) {
       console.error(err);
+    } finally {
+      setTableLoading(false);
     }
   };
 
@@ -124,7 +128,7 @@ export default function AdminProducts() {
       const res = await api.post('/products/import', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      alert(`Success! Inserted: ${res.data.insertedProducts}, Created Categories: ${res.data.createdCategories}`);
+      alert(`Success!\nInserted: ${res.data.insertedProducts}\nUpdated (price changed): ${res.data.updatedProducts}\nCreated Categories: ${res.data.createdCategories}`);
       setPreviewData(null);
       setSelectedFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -224,42 +228,48 @@ export default function AdminProducts() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.map((prod, index) => (
-            <TableRow key={prod.id} index={index}>
-              <TableCell>
-                <div className="font-medium text-slate-800 line-clamp-1">{prod.name_en}</div>
-                <div className="text-xs text-slate-500 line-clamp-1">{prod.name_ar}</div>
-                <div className="md:hidden mt-1 text-[10px] text-blue-500 font-medium">{prod.category?.name_en}</div>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">{prod.category?.name_en || 'None'}</TableCell>
-              <TableCell className="font-semibold text-slate-700">${prod.price_staff}</TableCell>
-              <TableCell className="font-semibold text-blue-600">${prod.price_guest}</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${prod.isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {prod.isAvailable ? t('Active') : t('Hidden')}
-                </span>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-1 sm:gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(prod)}>
-                    <Edit2 className="w-4 h-4 text-slate-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleDelete(prod.id)}>
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-          {products.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={6} className="text-center py-12 text-slate-500">
-                <div className="flex flex-col items-center gap-2">
-                  <UtensilsCrossed className="w-8 h-8 text-slate-200" />
-                  <p>{t('NoProductsFound')}</p>
-                </div>
-              </TableCell>
-            </TableRow>
+          {tableLoading ? (
+            <TableSkeleton cols={6} rows={6} />
+          ) : (
+            <>
+              {products.map((prod, index) => (
+                <TableRow key={prod.id} index={index}>
+                  <TableCell>
+                    <div className="font-medium text-slate-800 line-clamp-1">{prod.name_en}</div>
+                    <div className="text-xs text-slate-500 line-clamp-1">{prod.name_ar}</div>
+                    <div className="md:hidden mt-1 text-[10px] text-blue-500 font-medium">{prod.category?.name_en}</div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">{prod.category?.name_en || 'None'}</TableCell>
+                  <TableCell className="font-semibold text-slate-700">${prod.price_staff}</TableCell>
+                  <TableCell className="font-semibold text-blue-600">${prod.price_guest}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${prod.isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                      {prod.isAvailable ? t('Active') : t('Hidden')}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1 sm:gap-2">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(prod)}>
+                        <Edit2 className="w-4 h-4 text-slate-500" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleDelete(prod.id)}>
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {products.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12 text-slate-500">
+                    <div className="flex flex-col items-center gap-2">
+                      <UtensilsCrossed className="w-8 h-8 text-slate-200" />
+                      <p>{t('NoProductsFound')}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </>
           )}
         </TableBody>
       </Table>

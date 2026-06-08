@@ -9,6 +9,7 @@ export default function AdminDashboard() {
   const { t } = useTranslation();
   const { fetchCategories, fetchProducts } = useApp();
   const [stats, setStats] = useState({ categories: 0, products: 0 });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -23,6 +24,8 @@ export default function AdminDashboard() {
         });
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchStats();
@@ -51,8 +54,14 @@ export default function AdminDashboard() {
             <div className="relative z-10">
               <p className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-1">{t('TotalProducts')}</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-4xl font-black text-slate-800 group-hover:text-blue-500 transition-colors duration-300">{stats.products}</p>
-                <span className="text-blue-500 text-sm font-bold bg-blue-50 px-2.5 py-0.5 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">+12%</span>
+                {loading ? (
+                  <div className="h-10 w-16 rounded-xl bg-slate-100 animate-pulse" />
+                ) : (
+                  <>
+                    <p className="text-4xl font-black text-slate-800 group-hover:text-blue-500 transition-colors duration-300">{stats.products}</p>
+                    <span className="text-blue-500 text-sm font-bold bg-blue-50 px-2.5 py-0.5 rounded-full group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">+12%</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -69,8 +78,14 @@ export default function AdminDashboard() {
             <div className="relative z-10">
               <p className="text-sm font-semibold uppercase tracking-wider text-slate-400 mb-1">{t('TotalCategories')}</p>
               <div className="flex items-baseline gap-2">
-                <p className="text-4xl font-black text-slate-800 group-hover:text-blue-500 transition-colors duration-300">{stats.categories}</p>
-                <span className="text-slate-400 text-sm font-medium">{t('Standard')}</span>
+                {loading ? (
+                  <div className="h-10 w-16 rounded-xl bg-slate-100 animate-pulse" />
+                ) : (
+                  <>
+                    <p className="text-4xl font-black text-slate-800 group-hover:text-blue-500 transition-colors duration-300">{stats.categories}</p>
+                    <span className="text-slate-400 text-sm font-medium">{t('Standard')}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>

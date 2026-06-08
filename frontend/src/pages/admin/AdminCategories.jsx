@@ -4,6 +4,7 @@ import api from '@/services/api';
 import { useApp } from '@/context/AppContext';
 import { Button } from '@/components/ui/Button';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '@/components/ui/Table';
+import TableSkeleton from '@/components/ui/TableSkeleton';
 import { Edit2, Trash2, Plus, Tags, X } from 'lucide-react';
 
 export default function AdminCategories() {
@@ -12,9 +13,11 @@ export default function AdminCategories() {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ name_en: '', name_ar: '', isAvailable: true });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
+    setLoading(true);
+    fetchCategories().finally(() => setLoading(false));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -75,36 +78,42 @@ export default function AdminCategories() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {categories.map((cat, index) => (
-            <TableRow key={cat.id} index={index}>
-              <TableCell className="font-semibold text-slate-800">{cat.name_en}</TableCell>
-              <TableCell className="font-arabic">{cat.name_ar}</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${cat.isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {cat.isAvailable ? t('Active') : t('Hidden')}
-                </span>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-1 sm:gap-2">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(cat)}>
-                    <Edit2 className="w-4 h-4 text-slate-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleDelete(cat.id)}>
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-          {categories.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={4} className="text-center py-12 text-slate-500">
-                <div className="flex flex-col items-center gap-2">
-                  <Tags className="w-8 h-8 text-slate-200" />
-                  <p>{t('NoCategoriesFound')}</p>
-                </div>
-              </TableCell>
-            </TableRow>
+          {loading ? (
+            <TableSkeleton cols={4} rows={5} />
+          ) : (
+            <>
+              {categories.map((cat, index) => (
+                <TableRow key={cat.id} index={index}>
+                  <TableCell className="font-semibold text-slate-800">{cat.name_en}</TableCell>
+                  <TableCell className="font-arabic">{cat.name_ar}</TableCell>
+                  <TableCell className="hidden sm:table-cell">
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${cat.isAvailable ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                      {cat.isAvailable ? t('Active') : t('Hidden')}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1 sm:gap-2">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleEdit(cat)}>
+                        <Edit2 className="w-4 h-4 text-slate-500" />
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9" onClick={() => handleDelete(cat.id)}>
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {categories.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={4} className="text-center py-12 text-slate-500">
+                    <div className="flex flex-col items-center gap-2">
+                      <Tags className="w-8 h-8 text-slate-200" />
+                      <p>{t('NoCategoriesFound')}</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </>
           )}
         </TableBody>
       </Table>
